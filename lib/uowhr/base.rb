@@ -10,7 +10,7 @@ module UOwhr
     
     def initialize(config = {})
       @config = config
-      @config[:w2] ||= 60.0  # elo^2
+      @config[:w2] ||= 300.0  # elo^2
       @games = []
       @players = {}
     end

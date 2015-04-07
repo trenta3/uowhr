@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module WholeHistoryRating
+module UOwhr
 
   class UnstableRatingException < RuntimeError; end
 
@@ -10,7 +10,7 @@ module WholeHistoryRating
     
     def initialize(config = {})
       @config = config
-      @config[:w2] ||= 300.0  # elo^2
+      @config[:w2] ||= 60.0  # elo^2
       @games = []
       @players = {}
     end
@@ -43,28 +43,28 @@ module WholeHistoryRating
       player.days.map {|d| [d.day, d.elo.round, (d.uncertainty*100).round]}
     end
     
-    def setup_game(black, white, winner, time_step, handicap, extras = {})
+    def setup_game(uguale, opposto, outcome, time_step)
           
       # Avoid self-played games (no info)
-      if black == white
-        raise "Invalid game (black player == white player)"
+      if uguale == opposto
+        raise "Invalid game (uguale player == opposto player)"
         return nil
       end
     
-      white_player = player_by_name(white)
-      black_player = player_by_name(black)
-      game = Game.new(black_player, white_player, winner, time_step, handicap, extras)
+      opposto_player = player_by_name(opposto)
+      uguale_player = player_by_name(uguale)
+      game = Game.new(uguale_player, opposto_player, outcome, time_step)
       game
     end
     
-    def create_game(black, white, winner, time_step, handicap, extras = {})
-      game = setup_game(black, white, winner, time_step, handicap, extras)
+    def create_game(uguale, opposto, outcome, time_step)
+      game = setup_game(uguale, opposto, outcome, time_step)
       add_game(game)
     end
   
     def add_game(game)
-      game.white_player.add_game(game)
-      game.black_player.add_game(game)
+      game.opposto_player.add_game(game)
+      game.uguale_player.add_game(game)
       if game.bpd.nil?
         puts "Bad game: #{options.inspect} -> #{game.inspect}"
       end

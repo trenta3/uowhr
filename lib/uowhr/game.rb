@@ -1,4 +1,4 @@
-module WholeHistoryRating
+module UOwhr
   class Game
     attr_accessor :day, :opposto_player, :uguale_player, :outcome, :wpd, :bpd
   
